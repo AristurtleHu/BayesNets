@@ -143,9 +143,11 @@ def fillYCPT(bayesNet: BayesNet, gameState: GameState):
     """
 
     yFactor = bn.Factor([Y_POS_VAR], [], bayesNet.variableDomainsDict())
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    for value, probability in [(BOTH_TOP_VAL, PROB_BOTH_TOP),
+                               (BOTH_BOTTOM_VAL, PROB_BOTH_BOTTOM),
+                               (LEFT_TOP_VAL, PROB_ONLY_LEFT_TOP),
+                               (LEFT_BOTTOM_VAL, PROB_ONLY_LEFT_BOTTOM)]:
+        yFactor.setProbability({Y_POS_VAR: value}, probability)
     bayesNet.setCPT(Y_POS_VAR, yFactor)
 
 def fillHouseCPT(bayesNet: BayesNet, gameState: GameState):
