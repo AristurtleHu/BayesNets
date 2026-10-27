@@ -101,10 +101,20 @@ def joinFactors(factors: List[Factor]):
                     "Input factors: \n" +
                     "\n".join(map(str, factors)))
 
+    factors = list(factors)
+    unconditionedVariables = set()
+    conditionedVariables = set()
+    for factor in factors:
+        unconditionedVariables |= factor.unconditionedVariables()
+        conditionedVariables |= factor.conditionedVariables()
+    conditionedVariables -= unconditionedVariables
 
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    joinedFactor = Factor(unconditionedVariables, conditionedVariables,
+                          factors[0].variableDomainsDict())
+    for assignment in joinedFactor.getAllPossibleAssignmentDicts():
+        joinedFactor.setProbability(assignment,
+            functools.reduce(op.mul, (factor.getProbability(assignment) for factor in factors), 1))
+    return joinedFactor
 
 
 def eliminateWithCallTracking(callTrackingList=None):
