@@ -224,7 +224,21 @@ def normalize(factor: Factor):
                             "so that total probability will sum to 1\n" + 
                             str(factor))
 
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    variableDomainsDict = factor.variableDomainsDict()
+    unconditionedVariables = set()
+    conditionedVariables = set(factor.conditionedVariables())
+    for variable in factor.unconditionedVariables():
+        if len(variableDomainsDict[variable]) == 1:
+            conditionedVariables.add(variable)
+        else:
+            unconditionedVariables.add(variable)
+
+    newFactor = Factor(unconditionedVariables, conditionedVariables, variableDomainsDict)
+    assignments = newFactor.getAllPossibleAssignmentDicts()
+    total = sum(factor.getProbability(assignment) for assignment in assignments)
+    if total == 0:
+        return None
+    for assignment in assignments:
+        newFactor.setProbability(assignment, factor.getProbability(assignment) / total)
+    return newFactor
 
